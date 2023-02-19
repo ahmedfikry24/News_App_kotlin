@@ -16,6 +16,7 @@ import com.example.newsapp.api.ApiConstant
 import com.example.newsapp.api.ApiManager
 import com.example.newsapp.api.models.SourcesItem
 import com.example.newsapp.api.models.SourcesResponse
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,6 +24,7 @@ import retrofit2.Response
 
 class CategoriesFragment : Fragment() {
     lateinit var progressBar: ProgressBar
+    lateinit var tabLayout:TabLayout
     lateinit var errorLayout:LinearLayout
     lateinit var errorText:TextView
     lateinit var errorButton:Button
@@ -32,7 +34,7 @@ class CategoriesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.fragment_categories , container,false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,6 +45,7 @@ class CategoriesFragment : Fragment() {
 
     private fun init(view: View) {
         progressBar = view.findViewById(R.id.categories_progress_bar)
+        tabLayout = view.findViewById(R.id.tabs_layout)
         errorLayout = view.findViewById(R.id.category_error_layout)
         errorText = view.findViewById(R.id.category_error_text)
         errorButton = view.findViewById(R.id.category_error_button)
@@ -59,7 +62,6 @@ class CategoriesFragment : Fragment() {
                 ) {
                     progressBar.isVisible = false
                     if (response.isSuccessful){
-                        Log.e("ahmed","vbnmasdfgh")
                        bindingTabsResponse(response.body()?.sources)
                     }else{
                         val errorMessage =
@@ -78,7 +80,25 @@ class CategoriesFragment : Fragment() {
     }
 
     fun bindingTabsResponse(response: List<SourcesItem?>?) {
+response?.forEach{
+    val tab = tabLayout.newTab()
+    tab.text = it?.name
+    tabLayout.addTab(tab)
+    tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
+        override fun onTabSelected(tab: TabLayout.Tab?) {
 
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+        }
+
+        override fun onTabReselected(tab: TabLayout.Tab?) {
+
+        }
+
+    })
+}
     }
 
     fun showErrorLayout(errorMessage: String?) {
