@@ -1,9 +1,11 @@
+package com.example.newsapp.ui
+
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.newsapp.R
 import com.example.newsapp.api.ApiConstant
@@ -37,11 +39,29 @@ class MainActivity : AppCompatActivity() {
         errorText = findViewById(R.id.category_error_text)
         errorButton = findViewById(R.id.category_error_button)
     }
+
+    private fun initListeners(){
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+
+    }
     private fun getTabsSources() {
         showProgressBar()
         ApiManager.getApi()
             .getSources(ApiConstant.apiKey)
-            .enqueue( object : Callback<SourcesResponse>{
+            .enqueue( object : Callback<SourcesResponse> {
                 override fun onResponse(
                     call: Call<SourcesResponse>,
                     response: Response<SourcesResponse>
@@ -68,21 +88,8 @@ class MainActivity : AppCompatActivity() {
         response?.forEach{
             val tab = tabLayout.newTab()
             tab.text = it?.name
+            tab.tag = it?.id
             tabLayout.addTab(tab)
-            tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-                }
-
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                }
-
-            })
         }
     }
 

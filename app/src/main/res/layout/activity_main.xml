@@ -4,12 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
-    <TableLayout
+    tools:context=".ui.MainActivity">
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
+        app:tabMode="scrollable"
+        app:tabTextColor="@color/purple_700"
+        app:tabSelectedTextColor="@color/white"
+        app:tabBackground="@drawable/switch_tabs"
+        app:tabIndicatorColor="#00FFFFFF"
+        android:layout_margin="10dp"
         />
 
     <ProgressBar
