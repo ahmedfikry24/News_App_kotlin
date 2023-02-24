@@ -2,6 +2,7 @@ package com.example.newsapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -10,6 +11,7 @@ import androidx.core.view.isVisible
 import com.example.newsapp.R
 import com.example.newsapp.api.ApiConstant
 import com.example.newsapp.api.ApiManager
+import com.example.newsapp.api.models.ArticlesResponse
 import com.example.newsapp.api.models.SourcesItem
 import com.example.newsapp.api.models.SourcesResponse
 import com.google.android.material.tabs.TabLayout
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
+        initListeners()
         getTabsSources()
     }
 
@@ -40,10 +43,10 @@ class MainActivity : AppCompatActivity() {
         errorButton = findViewById(R.id.category_error_button)
     }
 
-    private fun initListeners(){
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+    private fun initListeners() {
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-
+                getArticles(tab?.tag as String)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -51,27 +54,31 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-
+                getArticles(tab?.tag as String)
             }
 
         })
 
     }
+
     private fun getTabsSources() {
         showProgressBar()
         ApiManager.getApi()
             .getSources(ApiConstant.apiKey)
-            .enqueue( object : Callback<SourcesResponse> {
+            .enqueue(object : Callback<SourcesResponse> {
                 override fun onResponse(
                     call: Call<SourcesResponse>,
                     response: Response<SourcesResponse>
                 ) {
                     progressBar.isVisible = false
-                    if (response.isSuccessful){
+                    if (response.isSuccessful) {
                         bindingTabsResponse(response.body()?.sources)
-                    }else{
+                    } else {
                         val errorMessage =
-                            Gson().fromJson(response.errorBody()?.string(), SourcesResponse::class.java).message
+                            Gson().fromJson(
+                                response.errorBody()?.string(),
+                                SourcesResponse::class.java
+                            ).message
                         showErrorLayout(errorMessage)
                     }
                 }
@@ -84,8 +91,9 @@ class MainActivity : AppCompatActivity() {
             })
 
     }
+
     fun bindingTabsResponse(response: List<SourcesItem?>?) {
-        response?.forEach{
+        response?.forEach {
             val tab = tabLayout.newTab()
             tab.text = it?.name
             tab.tag = it?.id
@@ -97,8 +105,26 @@ class MainActivity : AppCompatActivity() {
         errorLayout.isVisible = true
         errorText.text = errorMessage
     }
-    fun  showProgressBar(){
+
+    fun showProgressBar() {
         progressBar.isVisible = true
         errorLayout.isVisible = false
+    }
+
+    fun getArticles(id: String) {
+        ApiManager.getApi().getArticles(ApiConstant.apiKey, id)
+            .enqueue(object : Callback<ArticlesResponse> {
+                override fun onResponse(
+                    call: Call<ArticlesResponse>,
+                    response: Response<ArticlesResponse>
+                ) {
+                    Log.e("ahmed", "ahmed")
+                }
+
+                override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
+
+                }
+
+            })
     }
 }
