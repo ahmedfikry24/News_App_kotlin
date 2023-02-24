@@ -8,6 +8,9 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
+import com.example.newsapp.Adapters.ArticlesAdapter
 import com.example.newsapp.R
 import com.example.newsapp.api.ApiConstant
 import com.example.newsapp.api.ApiManager
@@ -26,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var errorLayout: LinearLayout
     private lateinit var errorText: TextView
     private lateinit var errorButton: Button
+    private lateinit var recycler: RecyclerView
+    private val adapter = ArticlesAdapter(listOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +46,8 @@ class MainActivity : AppCompatActivity() {
         errorLayout = findViewById(R.id.category_error_layout)
         errorText = findViewById(R.id.category_error_text)
         errorButton = findViewById(R.id.category_error_button)
+        recycler = findViewById(R.id.articlesRecylcerView)
+        recycler.adapter = adapter
     }
 
     private fun initListeners() {
@@ -112,17 +119,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getArticles(id: String) {
+        progressBar.isVisible = true
         ApiManager.getApi().getArticles(ApiConstant.apiKey, id)
             .enqueue(object : Callback<ArticlesResponse> {
                 override fun onResponse(
                     call: Call<ArticlesResponse>,
                     response: Response<ArticlesResponse>
                 ) {
-                    Log.e("ahmed", "ahmed")
+                    progressBar.isVisible = false
+                    adapter.changeDate(response.body()?.articles!!)
                 }
 
                 override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-
+                    progressBar.isVisible = false
                 }
 
             })
