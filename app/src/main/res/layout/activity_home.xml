@@ -65,7 +65,6 @@
                 android:drawablePadding="10dp"
                 app:drawableStartCompat="@drawable/ic_settings" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.navigation.NavigationView>
 

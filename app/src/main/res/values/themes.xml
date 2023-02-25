@@ -22,4 +22,31 @@
     <style name="Theme.NewsApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.NewsApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="left_item_bg" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.leftItemCategory</item>
+    </style>
+
+
+    <style name="ShapeAppearanceOverlay.leftItemCategory" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">18dp</item>
+        <item name="cornerSizeTopLeft">18dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">18dp</item>
+    </style>
+
+    <style name="right_item_bg" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.rightItemCategory</item>
+    </style>
+
+
+    <style name="ShapeAppearanceOverlay.rightItemCategory" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">18dp</item>
+        <item name="cornerSizeTopLeft">18dp</item>
+        <item name="cornerSizeBottomRight">18dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
 </resources>

@@ -6,8 +6,11 @@ import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapp.Adapters.CategoryAdapter
 import com.example.newsapp.R
 import com.example.newsapp.ui.fragments.CategoriesFragment
+import com.example.newsapp.ui.fragments.Category
 import com.example.newsapp.ui.fragments.SettingsFragment
 
 class HomeActivity : AppCompatActivity() {
@@ -15,12 +18,14 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var icMenu: ImageView
     private lateinit var categoriesTV: TextView
     private lateinit var settingsTV: TextView
+    private val categoriesFragment: CategoriesFragment = CategoriesFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         initViews()
         initListeners()
+        showFragments(categoriesFragment)
     }
 
     private fun initViews() {
@@ -28,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
         icMenu = findViewById(R.id.ic_menu)
         categoriesTV = findViewById(R.id.categories_tv)
         settingsTV = findViewById(R.id.settings_tv)
+
     }
 
 
@@ -37,7 +43,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         categoriesTV.setOnClickListener {
-            showFragments(CategoriesFragment())
+            showFragments(categoriesFragment)
             drawerLayout.close()
         }
 
