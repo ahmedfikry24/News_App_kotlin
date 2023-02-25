@@ -126,6 +126,8 @@ class MainActivity : AppCompatActivity() {
                     call: Call<ArticlesResponse>,
                     response: Response<ArticlesResponse>
                 ) {
+
+                    TODO("how to find progressBar from recycler view to here ?")
                     progressBar.isVisible = false
                     adapter.changeDate(response.body()?.articles!!)
                 }
