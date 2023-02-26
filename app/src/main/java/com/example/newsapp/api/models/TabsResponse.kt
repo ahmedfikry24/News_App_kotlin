@@ -2,22 +2,22 @@ package com.example.newsapp.api.models
 
 import com.google.gson.annotations.SerializedName
 
- class SourcesResponse(
+ class TabsResponse(
 
-	@field:SerializedName("sources")
-	val sources: List<SourcesItem?>? = null,
+	 @field:SerializedName("sources")
+	val tabs: List<Tab?>? = null,
 
-	@field:SerializedName("status")
+	 @field:SerializedName("status")
 	val status: String? = null,
 
 	 @field:SerializedName("code")
      val code: String? = null,
 
-	@field:SerializedName("message")
+	 @field:SerializedName("message")
 	val message: String? = null
 )
 
- class SourcesItem(
+ class Tab (
 
 	@field:SerializedName("country")
 	val country: String? = null,

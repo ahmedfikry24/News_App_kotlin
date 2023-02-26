@@ -1,11 +1,11 @@
 package com.example.newsapp.ui.fragments.categories
+import CategoryAdapter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapp.Adapters.CategoryAdapter
 import com.example.newsapp.R
 
 class CategoriesFragment : Fragment() {

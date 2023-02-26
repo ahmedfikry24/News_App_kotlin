@@ -52,7 +52,7 @@ class HomeActivity : AppCompatActivity() {
 
        categoriesFragment.onItemClick =object : CategoriesFragment.OnItemClick{
            override fun onItemClick(category: Category) {
-              showFragments(NewsFragment())
+              showFragments(NewsFragment.getInstance(category))
            }
        }
     }

@@ -10,19 +10,13 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.Adapters.ArticlesAdapter
 import com.example.newsapp.R
-import com.example.newsapp.api.ApiConstant
-import com.example.newsapp.api.ApiManager
-import com.example.newsapp.api.models.ArticlesResponse
-import com.example.newsapp.api.models.SourcesItem
-import com.example.newsapp.api.models.SourcesResponse
+import com.example.newsapp.api.models.Tab
+import com.example.newsapp.ui.fragments.categories.Category
 import com.google.android.material.tabs.TabLayout
-import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class NewsFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
@@ -32,6 +26,8 @@ class NewsFragment : Fragment() {
     private lateinit var errorButton: Button
     private lateinit var recycler: RecyclerView
     private val adapter = ArticlesAdapter(listOf())
+    private lateinit var newsViewModel : NewsViewModel
+    var category : Category? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,13 +38,27 @@ class NewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
         initViews(view)
         initListeners()
-        getTabsSources()
+        newsViewModel.getTabsSources()
     }
 
+   companion object {
+       fun getInstance(category: Category) : NewsFragment {
+           val newsFragment = NewsFragment()
+           newsFragment.category = category
+           return newsFragment
+       }
+   }
 
+fun observeViewModel(){
 
+    newsViewModel.tabsLiveData.observe(viewLifecycleOwner){
+        bindingTabsResponse(it)
+    }
+
+}
     private fun initViews(view: View) {
         progressBar = view.findViewById(R.id.categories_progress_bar)
         tabLayout = view.findViewById(R.id.tabs_layout)
@@ -62,7 +72,7 @@ class NewsFragment : Fragment() {
     private fun initListeners() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                getArticles(tab?.tag as String)
+               newsViewModel.getArticles(tab?.tag as String)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -70,45 +80,15 @@ class NewsFragment : Fragment() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                getArticles(tab?.tag as String)
+                newsViewModel.getArticles(tab?.tag as String)
             }
 
         })
 
     }
 
-    private fun getTabsSources() {
-        showProgressBar()
-        ApiManager.getApi()
-            .getSources(ApiConstant.apiKey)
-            .enqueue(object : Callback<SourcesResponse> {
-                override fun onResponse(
-                    call: Call<SourcesResponse>,
-                    response: Response<SourcesResponse>
-                ) {
-                    progressBar.isVisible = false
-                    if (response.isSuccessful) {
-                        bindingTabsResponse(response.body()?.sources)
-                    } else {
-                        val errorMessage =
-                            Gson().fromJson(
-                                response.errorBody()?.string(),
-                                SourcesResponse::class.java
-                            ).message
-                        showErrorLayout(errorMessage)
-                    }
-                }
 
-                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-                    progressBar.isVisible = false
-                    showErrorLayout(t.localizedMessage)
-                }
-
-            })
-
-    }
-
-    fun bindingTabsResponse(response: List<SourcesItem?>?) {
+    private fun bindingTabsResponse(response: List<Tab?>?) {
         response?.forEach {
             val tab = tabLayout.newTab()
             tab.text = it?.name
@@ -127,23 +107,5 @@ class NewsFragment : Fragment() {
         errorLayout.isVisible = false
     }
 
-    fun getArticles(id: String) {
-        progressBar.isVisible = true
-        ApiManager.getApi().getArticles(ApiConstant.apiKey, id)
-            .enqueue(object : Callback<ArticlesResponse> {
-                override fun onResponse(
-                    call: Call<ArticlesResponse>,
-                    response: Response<ArticlesResponse>
-                ) {
 
-                    progressBar.isVisible = false
-                    adapter.changeDate(response.body()?.articles!!)
-                }
-
-                override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-                    progressBar.isVisible = false
-                }
-
-            })
-    }
 }

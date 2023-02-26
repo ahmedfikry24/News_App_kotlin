@@ -1,4 +1,3 @@
-package com.example.newsapp.Adapters
 
 import android.view.LayoutInflater
 import android.view.View

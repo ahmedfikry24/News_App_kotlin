@@ -7,12 +7,12 @@ package com.example.newsapp.api.models
 )
 
  class Article(
-	val publishedAt: String? = null,
-	val author: String? = null,
-	val urlToImage: String? = null,
-	val description: String? = null,
-	val source: SourcesItem? = null,
-	val title: String? = null,
-	val url: String? = null,
-	val content: String? = null
+     val publishedAt: String? = null,
+     val author: String? = null,
+     val urlToImage: String? = null,
+     val description: String? = null,
+     val source: Tab? = null,
+     val title: String? = null,
+     val url: String? = null,
+     val content: String? = null
 )
