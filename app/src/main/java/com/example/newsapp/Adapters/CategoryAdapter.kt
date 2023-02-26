@@ -8,8 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.newsapp.R
-import com.example.newsapp.ui.fragments.Category
-import com.google.android.material.card.MaterialCardView
+import com.example.newsapp.ui.fragments.categories.Category
 
 class CategoryAdapter(var items: List<Category>) : Adapter<CategoryAdapter.CategoryViewHolder>() {
 
@@ -25,6 +24,13 @@ class CategoryAdapter(var items: List<Category>) : Adapter<CategoryAdapter.Categ
         holder.title.text = item.title
         holder.image.setImageResource(item.imageId)
         holder.itemView.setBackgroundColor(holder.itemView.context.getColor(item.color))
+        holder.itemView.setOnClickListener {
+            onCategoryItemClick?.onClick(item)
+        }
+    }
+var onCategoryItemClick : OnCategoryItemClick? = null
+    interface OnCategoryItemClick {
+        fun onClick(category: Category)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -35,7 +41,7 @@ class CategoryAdapter(var items: List<Category>) : Adapter<CategoryAdapter.Categ
     override fun getItemCount(): Int = items.size
 
     class CategoryViewHolder(view: View) : ViewHolder(view) {
-        val image: ImageView = view.findViewById(R.id.left_item_image)
-        val title: TextView = view.findViewById(R.id.left_item_text)
+        val image: ImageView = view.findViewById(R.id.item_image)
+        val title: TextView = view.findViewById(R.id.item_text)
     }
 }

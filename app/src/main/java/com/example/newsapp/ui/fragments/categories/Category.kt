@@ -1,4 +1,4 @@
-package com.example.newsapp.ui.fragments
+package com.example.newsapp.ui.fragments.categories
 
 data class Category (
 

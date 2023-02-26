@@ -1,15 +1,16 @@
-package com.example.newsapp.ui
+package com.example.newsapp.ui.fragments.news
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.example.newsapp.Adapters.ArticlesAdapter
 import com.example.newsapp.R
 import com.example.newsapp.api.ApiConstant
@@ -23,7 +24,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+class NewsFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var tabLayout: TabLayout
     private lateinit var errorLayout: LinearLayout
@@ -32,21 +33,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private val adapter = ArticlesAdapter(listOf())
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        initViews()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_news, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViews(view)
         initListeners()
         getTabsSources()
     }
 
-    private fun initViews() {
-        progressBar = findViewById(R.id.categories_progress_bar)
-        tabLayout = findViewById(R.id.tabs_layout)
-        errorLayout = findViewById(R.id.category_error_layout)
-        errorText = findViewById(R.id.category_error_text)
-        errorButton = findViewById(R.id.category_error_button)
-        recycler = findViewById(R.id.articlesRecylcerView)
+
+
+    private fun initViews(view: View) {
+        progressBar = view.findViewById(R.id.categories_progress_bar)
+        tabLayout = view.findViewById(R.id.tabs_layout)
+        errorLayout = view.findViewById(R.id.category_error_layout)
+        errorText = view.findViewById(R.id.category_error_text)
+        errorButton = view.findViewById(R.id.category_error_button)
+        recycler = view.findViewById(R.id.articlesRecylcerView)
         recycler.adapter = adapter
     }
 
@@ -127,7 +136,6 @@ class MainActivity : AppCompatActivity() {
                     response: Response<ArticlesResponse>
                 ) {
 
-                    TODO("how to find progressBar from recycler view to here ?")
                     progressBar.isVisible = false
                     adapter.changeDate(response.body()?.articles!!)
                 }

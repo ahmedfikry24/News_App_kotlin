@@ -5,13 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:shapeAppearanceOverlay="@style/right_item_bg"
+    android:layout_margin="10dp"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/right_item_image"
+            android:id="@+id/item_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -20,14 +21,14 @@
             tools:src="@drawable/ball"
             />
         <TextView
-            android:id="@+id/right_item_text"
+            android:id="@+id/item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/left_item_image"
+            app:layout_constraintTop_toBottomOf="@id/item_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Sports"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textColor="@color/white"
             />
 

@@ -1,17 +1,15 @@
 package com.example.newsapp.ui
-
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapp.Adapters.CategoryAdapter
 import com.example.newsapp.R
-import com.example.newsapp.ui.fragments.CategoriesFragment
-import com.example.newsapp.ui.fragments.Category
-import com.example.newsapp.ui.fragments.SettingsFragment
+import com.example.newsapp.ui.fragments.categories.CategoriesFragment
+import com.example.newsapp.ui.fragments.categories.Category
+import com.example.newsapp.ui.fragments.news.NewsFragment
+import com.example.newsapp.ui.fragments.settings.SettingsFragment
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -51,9 +49,15 @@ class HomeActivity : AppCompatActivity() {
             showFragments(SettingsFragment())
             drawerLayout.close()
         }
+
+       categoriesFragment.onItemClick =object : CategoriesFragment.OnItemClick{
+           override fun onItemClick(category: Category) {
+              showFragments(NewsFragment())
+           }
+       }
     }
 
-    fun showFragments(fragment: Fragment) {
+    private fun showFragments(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_fragment_container, fragment)
             .commit()
