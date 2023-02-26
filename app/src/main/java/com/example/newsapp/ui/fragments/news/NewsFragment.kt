@@ -26,8 +26,8 @@ class NewsFragment : Fragment() {
     private lateinit var errorButton: Button
     private lateinit var recycler: RecyclerView
     private val adapter = ArticlesAdapter(listOf())
-    private lateinit var newsViewModel : NewsViewModel
-    var category : Category? = null
+    private lateinit var newsViewModel: NewsViewModel
+    var category: Category? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,23 +42,36 @@ class NewsFragment : Fragment() {
         initViews(view)
         initListeners()
         newsViewModel.getTabsSources()
+        observeViewModel()
     }
 
-   companion object {
-       fun getInstance(category: Category) : NewsFragment {
-           val newsFragment = NewsFragment()
-           newsFragment.category = category
-           return newsFragment
-       }
-   }
-
-fun observeViewModel(){
-
-    newsViewModel.tabsLiveData.observe(viewLifecycleOwner){
-        bindingTabsResponse(it)
+    companion object {
+        fun getInstance(category: Category): NewsFragment {
+            val newsFragment = NewsFragment()
+            newsFragment.category = category
+            return newsFragment
+        }
     }
 
-}
+    private fun observeViewModel() {
+
+        newsViewModel.tabsLiveData.observe(viewLifecycleOwner) {
+            bindingTabsResponse(it)
+        }
+        newsViewModel.progressBarLiveData.observe(viewLifecycleOwner) {
+            progressBar.isVisible = it
+        }
+        newsViewModel.errorLayoutLiveData.observe(viewLifecycleOwner) {
+            errorLayout.isVisible = it
+        }
+        newsViewModel.errorMessageLiveData.observe(viewLifecycleOwner){
+            showErrorLayout(it)
+        }
+        newsViewModel.articlesLiveData.observe(viewLifecycleOwner){
+            adapter.changeDate(it)
+        }
+    }
+
     private fun initViews(view: View) {
         progressBar = view.findViewById(R.id.categories_progress_bar)
         tabLayout = view.findViewById(R.id.tabs_layout)
@@ -72,7 +85,7 @@ fun observeViewModel(){
     private fun initListeners() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-               newsViewModel.getArticles(tab?.tag as String)
+                newsViewModel.getArticles(tab?.tag as String)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -97,15 +110,8 @@ fun observeViewModel(){
         }
     }
 
-    fun showErrorLayout(errorMessage: String?) {
+    private fun showErrorLayout(errorMessage: String?) {
         errorLayout.isVisible = true
         errorText.text = errorMessage
     }
-
-    fun showProgressBar() {
-        progressBar.isVisible = true
-        errorLayout.isVisible = false
-    }
-
-
 }

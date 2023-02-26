@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.newsapp.api.ApiConstant
 import com.example.newsapp.api.ApiManager
+import com.example.newsapp.api.models.Article
 import com.example.newsapp.api.models.ArticlesResponse
 import com.example.newsapp.api.models.Tab
 import com.example.newsapp.api.models.TabsResponse
@@ -14,10 +15,15 @@ import retrofit2.Response
 
 class NewsViewModel : ViewModel() {
 
-val tabsLiveData = MutableLiveData<List<Tab?>?>()
+    val tabsLiveData = MutableLiveData<List<Tab?>?>()
+    val progressBarLiveData = MutableLiveData<Boolean>()
+    val errorLayoutLiveData = MutableLiveData<Boolean>()
+    val errorMessageLiveData = MutableLiveData<String>()
+    val articlesLiveData = MutableLiveData<List<Article?>>()
 
     fun getTabsSources() {
-        //showProgressBar()
+        errorLayoutLiveData.value = false
+        progressBarLiveData.value = true
         ApiManager.getApi()
             .getSources(ApiConstant.apiKey)
             .enqueue(object : Callback<TabsResponse> {
@@ -25,7 +31,7 @@ val tabsLiveData = MutableLiveData<List<Tab?>?>()
                     call: Call<TabsResponse>,
                     response: Response<TabsResponse>
                 ) {
-          //          progressBar.isVisible = false
+                    progressBarLiveData.value = false
                     if (response.isSuccessful) {
                         tabsLiveData.value = response.body()?.tabs!!
 
@@ -35,13 +41,13 @@ val tabsLiveData = MutableLiveData<List<Tab?>?>()
                                 response.errorBody()?.string(),
                                 TabsResponse::class.java
                             ).message
-              //          showErrorLayout(errorMessage)
+                        errorMessageLiveData.value = errorMessage!!
                     }
                 }
 
                 override fun onFailure(call: Call<TabsResponse>, t: Throwable) {
-                //    progressBar.isVisible = false
-                //   showErrorLayout(t.localizedMessage)
+                    progressBarLiveData.value = false
+                    errorMessageLiveData.value = t.localizedMessage
                 }
 
             })
@@ -50,20 +56,19 @@ val tabsLiveData = MutableLiveData<List<Tab?>?>()
 
 
     fun getArticles(id: String) {
-        // progressBar.isVisible = true
+        progressBarLiveData.value = true
         ApiManager.getApi().getArticles(ApiConstant.apiKey, id)
             .enqueue(object : Callback<ArticlesResponse> {
                 override fun onResponse(
                     call: Call<ArticlesResponse>,
                     response: Response<ArticlesResponse>
                 ) {
-
-                    //           progressBar.isVisible = false
-                    //         adapter.changeDate(response.body()?.articles!!)
+                    progressBarLiveData.value = false
+                    articlesLiveData.value = response.body()?.articles!!
                 }
 
                 override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-                    //       progressBar.isVisible = false
+                    progressBarLiveData.value = false
                 }
 
             })
