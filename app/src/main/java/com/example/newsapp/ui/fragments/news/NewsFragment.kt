@@ -10,21 +10,18 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.Adapters.ArticlesAdapter
 import com.example.newsapp.R
 import com.example.newsapp.api.models.Tab
+import com.example.newsapp.databinding.FragmentNewsBinding
 import com.example.newsapp.ui.fragments.categories.Category
 import com.google.android.material.tabs.TabLayout
 
 class NewsFragment : Fragment() {
-    private lateinit var progressBar: ProgressBar
-    private lateinit var tabLayout: TabLayout
-    private lateinit var errorLayout: LinearLayout
-    private lateinit var errorText: TextView
-    private lateinit var errorButton: Button
-    private lateinit var recycler: RecyclerView
+    private lateinit var binding: FragmentNewsBinding
     private val adapter = ArticlesAdapter(listOf())
     private lateinit var newsViewModel: NewsViewModel
     var category: Category? = null
@@ -32,14 +29,21 @@ class NewsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_news, container, false)
+    ): View {
+
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_news,
+            container,
+            false
+        )
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
-        initViews(view)
+        initViews()
         initListeners()
         newsViewModel.getTabsSources()
         observeViewModel()
@@ -59,31 +63,25 @@ class NewsFragment : Fragment() {
             bindingTabsResponse(it)
         }
         newsViewModel.progressBarLiveData.observe(viewLifecycleOwner) {
-            progressBar.isVisible = it
+            binding.categoriesProgressBar.isVisible = it
         }
         newsViewModel.errorLayoutLiveData.observe(viewLifecycleOwner) {
-            errorLayout.isVisible = it
+            binding.categoryErrorLayout.isVisible = it
         }
-        newsViewModel.errorMessageLiveData.observe(viewLifecycleOwner){
+        newsViewModel.errorMessageLiveData.observe(viewLifecycleOwner) {
             showErrorLayout(it)
         }
-        newsViewModel.articlesLiveData.observe(viewLifecycleOwner){
+        newsViewModel.articlesLiveData.observe(viewLifecycleOwner) {
             adapter.changeDate(it)
         }
     }
 
-    private fun initViews(view: View) {
-        progressBar = view.findViewById(R.id.categories_progress_bar)
-        tabLayout = view.findViewById(R.id.tabs_layout)
-        errorLayout = view.findViewById(R.id.category_error_layout)
-        errorText = view.findViewById(R.id.category_error_text)
-        errorButton = view.findViewById(R.id.category_error_button)
-        recycler = view.findViewById(R.id.articlesRecylcerView)
-        recycler.adapter = adapter
+    private fun initViews() {
+        binding.articlesRecylcerView.adapter = adapter
     }
 
     private fun initListeners() {
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabsLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 newsViewModel.getArticles(tab?.tag as String)
             }
@@ -103,15 +101,15 @@ class NewsFragment : Fragment() {
 
     private fun bindingTabsResponse(response: List<Tab?>?) {
         response?.forEach {
-            val tab = tabLayout.newTab()
+            val tab = binding.tabsLayout.newTab()
             tab.text = it?.name
             tab.tag = it?.id
-            tabLayout.addTab(tab)
+            binding.tabsLayout.addTab(tab)
         }
     }
 
     private fun showErrorLayout(errorMessage: String?) {
-        errorLayout.isVisible = true
-        errorText.text = errorMessage
+        binding.categoryErrorLayout.isVisible = true
+        binding.categoryErrorText.text = errorMessage
     }
 }
