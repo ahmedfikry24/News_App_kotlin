@@ -1,12 +1,10 @@
 package com.example.newsapp.Adapters
-
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
 import com.example.newsapp.R
 import com.example.newsapp.api.models.Article
 import com.example.newsapp.databinding.ArticlesItemBinding

@@ -21,11 +21,11 @@ class NewsViewModel : ViewModel() {
     val errorMessageLiveData = MutableLiveData<String>()
     val articlesLiveData = MutableLiveData<List<Article?>>()
 
-    fun getTabsSources() {
+    fun getTabsSources(id: String) {
         errorLayoutLiveData.value = false
         progressBarLiveData.value = true
         ApiManager.getApi()
-            .getSources(ApiConstant.apiKey)
+            .getSources(ApiConstant.apiKey, id)
             .enqueue(object : Callback<TabsResponse> {
                 override fun onResponse(
                     call: Call<TabsResponse>,
@@ -55,16 +55,18 @@ class NewsViewModel : ViewModel() {
     }
 
 
-    fun getArticles(id: String) {
+    fun getArticles(id: String, page: Int) {
         progressBarLiveData.value = true
-        ApiManager.getApi().getArticles(ApiConstant.apiKey, id)
+        ApiManager.getApi().getArticles(ApiConstant.apiKey, id, 20, page)
             .enqueue(object : Callback<ArticlesResponse> {
                 override fun onResponse(
                     call: Call<ArticlesResponse>,
                     response: Response<ArticlesResponse>
                 ) {
                     progressBarLiveData.value = false
-                    articlesLiveData.value = response.body()?.articles!!
+                    if (response.body()?.articles != null)
+                        articlesLiveData.value = response.body()?.articles!!
+
                 }
 
                 override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {

@@ -1,18 +1,16 @@
 package com.example.newsapp.ui.fragments.news
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.newsapp.Adapters.ArticlesAdapter
 import com.example.newsapp.R
 import com.example.newsapp.api.models.Tab
@@ -25,6 +23,7 @@ class NewsFragment : Fragment() {
     private val adapter = ArticlesAdapter(listOf())
     private lateinit var newsViewModel: NewsViewModel
     var category: Category? = null
+    var currentPage = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +44,7 @@ class NewsFragment : Fragment() {
         newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
         initViews()
         initListeners()
-        newsViewModel.getTabsSources()
+        newsViewModel.getTabsSources(category?.id!!)
         observeViewModel()
     }
 
@@ -83,7 +82,8 @@ class NewsFragment : Fragment() {
     private fun initListeners() {
         binding.tabsLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                newsViewModel.getArticles(tab?.tag as String)
+
+                newsViewModel.getArticles(tab?.tag as String, currentPage)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -91,11 +91,26 @@ class NewsFragment : Fragment() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                newsViewModel.getArticles(tab?.tag as String)
+
+                newsViewModel.getArticles(tab?.tag as String, currentPage)
             }
 
         })
-
+        binding.categoryErrorButton.setOnClickListener {
+            newsViewModel.getTabsSources(category?.id!!)
+        }
+        binding.articlesRecylcerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                val totalItems = layoutManager.itemCount
+                if(totalItems.minus(lastVisibleItem) <= 3){
+                    currentPage++
+                    newsViewModel.getArticles("", currentPage)
+                }
+            }
+        })
     }
 
 
