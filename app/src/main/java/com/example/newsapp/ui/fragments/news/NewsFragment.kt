@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.newsapp.Adapters.ArticlesAdapter
 import com.example.newsapp.R
+import com.example.newsapp.api.models.Article
 import com.example.newsapp.api.models.Tab
 import com.example.newsapp.databinding.FragmentNewsBinding
 import com.example.newsapp.ui.fragments.categories.Category
@@ -24,6 +24,7 @@ class NewsFragment : Fragment() {
     private lateinit var newsViewModel: NewsViewModel
     var category: Category? = null
     var currentPage = 1
+    var firstItemId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -105,17 +106,28 @@ class NewsFragment : Fragment() {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 val totalItems = layoutManager.itemCount
-                if(totalItems.minus(lastVisibleItem) <= 3){
+                if (totalItems.minus(lastVisibleItem) <= 3) {
                     currentPage++
-                    newsViewModel.getArticles("", currentPage)
+                    newsViewModel.getArticles(firstItemId, currentPage)
                 }
             }
         })
+        adapter.onItemClick = object : ArticlesAdapter.OnItemClick {
+            override fun onItemClick(article: Article) {
+                onItemClick?.onItemClick(article)
+            }
+        }
     }
 
+    var onItemClick: OnItemClick? = null
+
+    interface OnItemClick {
+        fun onItemClick(article: Article)
+    }
 
     private fun bindingTabsResponse(response: List<Tab?>?) {
-        response?.forEach {
+        firstItemId = response?.first()?.id!!
+        response.forEach {
             val tab = binding.tabsLayout.newTab()
             tab.text = it?.name
             tab.tag = it?.id

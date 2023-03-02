@@ -1,4 +1,5 @@
 package com.example.newsapp.Adapters
+
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -26,7 +27,16 @@ class ArticlesAdapter(var items: List<Article?>) : Adapter<ArticlesAdapter.Artic
 
     override fun onBindViewHolder(holder: ArticlesViewHolder, position: Int) {
         holder.binding.item = items[position]
+        holder.binding.itemView.setOnClickListener {
+            onItemClick?.onItemClick(items[position]!!)
+        }
         holder.binding.executePendingBindings()
+    }
+
+    var onItemClick: OnItemClick? = null
+
+    interface OnItemClick {
+        fun onItemClick(article: Article)
     }
 
     @SuppressLint("NotifyDataSetChanged")

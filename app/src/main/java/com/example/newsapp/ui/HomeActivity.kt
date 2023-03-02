@@ -1,11 +1,15 @@
 package com.example.newsapp.ui
+
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.newsapp.NewsDetailsActivity
 import com.example.newsapp.R
+import com.example.newsapp.api.models.Article
 import com.example.newsapp.ui.fragments.categories.CategoriesFragment
 import com.example.newsapp.ui.fragments.categories.Category
 import com.example.newsapp.ui.fragments.news.NewsFragment
@@ -35,7 +39,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-   private fun initListeners() {
+    private fun initListeners() {
         icMenu.setOnClickListener {
             drawerLayout.open()
         }
@@ -50,11 +54,19 @@ class HomeActivity : AppCompatActivity() {
             drawerLayout.close()
         }
 
-       categoriesFragment.onItemClick =object : CategoriesFragment.OnItemClick{
-           override fun onItemClick(category: Category) {
-              showFragments(NewsFragment.getInstance(category))
-           }
-       }
+        categoriesFragment.onItemClick = object : CategoriesFragment.OnItemClick {
+            override fun onItemClick(category: Category) {
+                showFragments(NewsFragment.getInstance(category))
+            }
+        }
+        NewsFragment().onItemClick = object : NewsFragment.OnItemClick {
+            override fun onItemClick(article: Article) {
+                val intent = Intent(this@HomeActivity, NewsDetailsActivity::class.java)
+                intent.putExtra("article", article)
+                startActivity(intent)
+            }
+
+        }
     }
 
     private fun showFragments(fragment: Fragment) {
