@@ -31,6 +31,9 @@ class ArticlesAdapter(var items: List<Article?>) : Adapter<ArticlesAdapter.Artic
             onItemClick?.onItemClick(items[position]!!)
         }
         holder.binding.executePendingBindings()
+        holder.itemView.setOnClickListener {
+            onItemClick?.onItemClick(items[position]!!)
+        }
     }
 
     var onItemClick: OnItemClick? = null

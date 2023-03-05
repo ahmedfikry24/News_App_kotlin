@@ -1,5 +1,7 @@
 package com.example.newsapp.api.models
 
+import java.io.Serializable
+
 class ArticlesResponse(
     val totalResults: Int? = null,
     val articles: List<Article?>? = null,
@@ -15,4 +17,4 @@ class Article(
     val title: String? = null,
     val url: String? = null,
     val content: String? = null
-) : java.io.Serializable
+)

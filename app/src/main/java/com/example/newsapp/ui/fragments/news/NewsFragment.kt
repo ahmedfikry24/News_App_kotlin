@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.fragments.news
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class NewsFragment : Fragment() {
             newsFragment.category = category
             return newsFragment
         }
+        var onItemClick: OnItemClick? = null
     }
 
     private fun observeViewModel() {
@@ -83,8 +85,8 @@ class NewsFragment : Fragment() {
     private fun initListeners() {
         binding.tabsLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-
-                newsViewModel.getArticles(tab?.tag as String, currentPage)
+                firstItemId = tab?.tag as String
+                newsViewModel.getArticles(firstItemId, currentPage)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -92,8 +94,8 @@ class NewsFragment : Fragment() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-
-                newsViewModel.getArticles(tab?.tag as String, currentPage)
+                firstItemId = tab?.tag as String
+                newsViewModel.getArticles(firstItemId, currentPage)
             }
 
         })
@@ -119,7 +121,6 @@ class NewsFragment : Fragment() {
         }
     }
 
-    var onItemClick: OnItemClick? = null
 
     interface OnItemClick {
         fun onItemClick(article: Article)
