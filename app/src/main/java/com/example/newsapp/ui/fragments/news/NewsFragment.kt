@@ -26,6 +26,7 @@ class NewsFragment : Fragment() {
     var category: Category? = null
     var currentPage = 1
     var firstItemId = ""
+    var isLoadArticle = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,6 +77,9 @@ class NewsFragment : Fragment() {
         newsViewModel.articlesLiveData.observe(viewLifecycleOwner) {
             adapter.changeDate(it)
         }
+        newsViewModel.isLoadArticle.observe(viewLifecycleOwner){
+            isLoadArticle = it
+        }
     }
 
     private fun initViews() {
@@ -108,7 +112,7 @@ class NewsFragment : Fragment() {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 val totalItems = layoutManager.itemCount
-                if (totalItems.minus(lastVisibleItem) <= 3) {
+                if ( isLoadArticle && totalItems.minus(lastVisibleItem) <= 3) {
                     currentPage++
                     newsViewModel.getArticles(firstItemId, currentPage)
                 }

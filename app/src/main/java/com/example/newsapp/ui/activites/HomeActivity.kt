@@ -1,14 +1,12 @@
-package com.example.newsapp.ui
+package com.example.newsapp.ui.activites
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.newsapp.NewsDetailsActivity
 import com.example.newsapp.R
 import com.example.newsapp.api.models.Article
 import com.example.newsapp.ui.fragments.categories.CategoriesFragment
@@ -22,7 +20,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var categoriesTV: TextView
     private lateinit var settingsTV: TextView
     private val categoriesFragment: CategoriesFragment = CategoriesFragment()
-    private val newsFragment : NewsFragment = NewsFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)

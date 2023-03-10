@@ -20,6 +20,7 @@ class NewsViewModel : ViewModel() {
     val errorLayoutLiveData = MutableLiveData<Boolean>()
     val errorMessageLiveData = MutableLiveData<String>()
     val articlesLiveData = MutableLiveData<List<Article?>>()
+    val isLoadArticle = MutableLiveData<Boolean>()
 
     fun getTabsSources(id: String) {
         errorLayoutLiveData.value = false
@@ -57,6 +58,7 @@ class NewsViewModel : ViewModel() {
 
     fun getArticles(id: String, page: Int) {
         progressBarLiveData.value = true
+        isLoadArticle.value = false
         ApiManager.getApi().getArticles(ApiConstant.apiKey, id, 20, page)
             .enqueue(object : Callback<ArticlesResponse> {
                 override fun onResponse(

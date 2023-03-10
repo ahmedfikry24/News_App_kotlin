@@ -14,10 +14,11 @@
         android:theme="@style/Theme.NewsApp"
         tools:targetApi="31">
         <activity
-            android:name=".NewsDetailsActivity"
-            android:exported="false" />
+            android:name=".ui.activites.NewsDetailsActivity"
+            android:exported="false"
+            />
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.activites.HomeActivity"
             android:exported="true"
             android:label="@string/news_app"
             android:theme="@style/Theme.NewsApp.NoActionBar">
