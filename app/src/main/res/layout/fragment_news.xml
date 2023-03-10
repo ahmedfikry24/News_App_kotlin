@@ -21,7 +21,8 @@
             app:tabSelectedTextColor="@color/white"
             app:tabBackground="@drawable/switch_tabs"
             app:tabIndicatorColor="#00FFFFFF"
-            android:layout_margin="10dp" />
+            app:tabPaddingEnd="10dp"
+            />
 
         <ProgressBar
             android:id="@+id/categories_progress_bar"

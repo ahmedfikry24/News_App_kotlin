@@ -17,4 +17,4 @@ class Article(
     val title: String? = null,
     val url: String? = null,
     val content: String? = null
-)
+):Serializable

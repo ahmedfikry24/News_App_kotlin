@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.fragments.news
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.example.newsapp.R
 import com.example.newsapp.api.models.Article
 import com.example.newsapp.api.models.Tab
 import com.example.newsapp.databinding.FragmentNewsBinding
+import com.example.newsapp.ui.activites.NewsDetailsActivity
 import com.example.newsapp.ui.fragments.categories.Category
 import com.google.android.material.tabs.TabLayout
 
@@ -57,7 +59,6 @@ class NewsFragment : Fragment() {
             newsFragment.category = category
             return newsFragment
         }
-        var onItemClick: OnItemClick? = null
     }
 
     private fun observeViewModel() {
@@ -120,15 +121,13 @@ class NewsFragment : Fragment() {
         })
         adapter.onItemClick = object : ArticlesAdapter.OnItemClick {
             override fun onItemClick(article: Article) {
-                onItemClick?.onItemClick(article)
+                val intent = Intent(requireContext(),NewsDetailsActivity::class.java)
+                intent.putExtra("article" , article)
+                startActivity(intent)
             }
         }
     }
 
-
-    interface OnItemClick {
-        fun onItemClick(article: Article)
-    }
 
     private fun bindingTabsResponse(response: List<Tab?>?) {
         firstItemId = response?.first()?.id!!

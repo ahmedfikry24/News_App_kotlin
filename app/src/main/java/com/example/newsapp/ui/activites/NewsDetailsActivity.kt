@@ -7,10 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.newsapp.R
+import com.example.newsapp.api.models.Article
 import com.example.newsapp.databinding.ActivityNewsDetailsBinding
 
 class NewsDetailsActivity : AppCompatActivity() {
-    private var article:String? = null
+    private var article:Article? = null
    lateinit var binding : ActivityNewsDetailsBinding
    lateinit var newsDetailsViewModel: NewsDetailsViewModel
 
@@ -23,8 +24,7 @@ class NewsDetailsActivity : AppCompatActivity() {
     }
 
     private fun initViews(){
-
-       article = intent.getStringExtra("content")
-        println(article)
+       article = intent.getSerializableExtra("article") as Article
+        binding.article = article
     }
 }

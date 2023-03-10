@@ -58,14 +58,6 @@ class HomeActivity : AppCompatActivity() {
                 showFragments(NewsFragment.getInstance(category))
             }
         }
-        NewsFragment.onItemClick = object : NewsFragment.OnItemClick {
-            override fun onItemClick(article: Article) {
-                val intent = Intent(this@HomeActivity, NewsDetailsActivity::class.java)
-                intent.putExtra("content", article.content)
-                startActivity(intent)
-            }
-
-        }
     }
 
     private fun showFragments(fragment: Fragment) {

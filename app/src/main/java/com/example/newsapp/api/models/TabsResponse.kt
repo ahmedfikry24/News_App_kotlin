@@ -39,4 +39,4 @@ import com.google.gson.annotations.SerializedName
 
 	@field:SerializedName("url")
 	val url: String? = null
-)
+):java.io.Serializable
